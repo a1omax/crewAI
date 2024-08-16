@@ -8,7 +8,7 @@ from opentelemetry.trace import Span
 from crewai.telemetry.abstract_telemetry_strategy import AbstractTelemetryStrategy
 
 from crewai.utilities import Logger
-
+from crewai.utilities.logger import FileLogger
 
 if TYPE_CHECKING:
 	from crewai.crew import Crew
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 class LoggerStrategy(AbstractTelemetryStrategy):
 
-	def __init__(self, logger: Logger):
+	def __init__(self, logger: FileLogger):
 		self._logger = logger
 
 	@override
@@ -60,3 +60,4 @@ class LoggerStrategy(AbstractTelemetryStrategy):
 	@override
 	def end_crew(self, crew: Crew, output: Any):
 		self._logger.log("info", f"Crew execution ended: ID={crew.id}, Output={output}")
+

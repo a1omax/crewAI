@@ -4,6 +4,7 @@ from __future__ import annotations
 import os
 
 from enum import Enum
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 
@@ -13,6 +14,7 @@ from crewai.telemetry.logger_strategy import LoggerStrategy
 from crewai.telemetry.server_strategy import ServerStrategy
 from crewai.utilities import Logger
 from crewai.telemetry.abstract_telemetry_strategy import AbstractTelemetryStrategy
+from crewai.utilities.logger import FileLogger
 
 if TYPE_CHECKING:
     from crewai.crew import Crew
@@ -60,8 +62,14 @@ class Telemetry:
 
         # elif monitoring_type_enum == MonitoringType.LOCAL:
         else:
+            monitoring_path_str = os.environ["MONITORING_LOCAL_PATH"]
+            monitoring_path = Path(monitoring_path_str)
+            monitoring_path.mkdir(parents=True, exist_ok=True)
+            monitoring_path = Path(monitoring_path, "log.txt")  # hardcoded filename
 
-            self.telemetry_strategy: AbstractTelemetryStrategy = LoggerStrategy(Logger(verbose_level=2))
+            self.telemetry_strategy: AbstractTelemetryStrategy = LoggerStrategy(
+                FileLogger(filepath=monitoring_path, verbose_level=2)
+            )
 
 
 
