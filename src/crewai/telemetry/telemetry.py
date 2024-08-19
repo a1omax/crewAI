@@ -62,7 +62,7 @@ class Telemetry:
 
         # elif monitoring_type_enum == MonitoringType.LOCAL:
         else:
-            monitoring_path_str = os.environ["MONITORING_LOCAL_PATH"]
+            monitoring_path_str = os.environ.get("MONITORING_LOCAL_PATH", ".")
             monitoring_path = Path(monitoring_path_str)
             monitoring_path.mkdir(parents=True, exist_ok=True)
             monitoring_path = Path(monitoring_path, "log.txt")  # hardcoded filename
