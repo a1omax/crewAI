@@ -21,6 +21,16 @@ class Printer:
             self._print_yellow(content)
         elif color == "bold_yellow":
             self._print_bold_yellow(content)
+        elif color == "cyan":
+            self._print_cyan(content)
+        elif color == "bold_cyan":
+            self._print_bold_cyan(content)
+        elif color == "magenta":
+            self._print_magenta(content)
+        elif color == "bold_magenta":
+            self._print_bold_magenta(content)
+        elif color == "green":
+            self._print_green(content)
         else:
             print(content)
 
