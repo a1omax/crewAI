@@ -43,6 +43,7 @@ class CrewAgentExecutor(CrewAgentExecutorMixin):
         respect_context_window: bool = False,
         request_within_rpm_limit: Any = None,
         callbacks: List[Any] = [],
+        ask_human_input_callback: Any = input
     ):
         self._i18n: I18N = I18N()
         self.llm = llm
@@ -74,6 +75,7 @@ class CrewAgentExecutor(CrewAgentExecutorMixin):
             self.llm.stop = list(set(self.llm.stop + self.stop))
         else:
             self.llm.stop = self.stop
+        self.ask_human_input_callback = ask_human_input_callback
 
     def invoke(self, inputs: Dict[str, str]) -> Dict[str, Any]:
         if "system" in self.prompt:
@@ -92,6 +94,8 @@ class CrewAgentExecutor(CrewAgentExecutorMixin):
         formatted_answer = self._invoke_loop()
 
         if self.ask_for_human_input:
+            if self.step_callback:
+                self.step_callback(formatted_answer)
             human_feedback = self._ask_human_input(formatted_answer.output)
             if self.crew and self.crew._train:
                 self._handle_crew_training_output(formatted_answer, human_feedback)

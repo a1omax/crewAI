@@ -111,6 +111,10 @@ class Agent(BaseAgent):
         default=2,
         description="Maximum number of retries for an agent to execute a task when an error occurs.",
     )
+    ask_human_input_callback: Optional[Any] = Field(
+        default=input,
+        description="Callback to be executed after Agent action if user_input is true",
+    )
 
     @model_validator(mode="after")
     def post_init_setup(self):
@@ -292,10 +296,11 @@ class Agent(BaseAgent):
             step_callback=self.step_callback,
             function_calling_llm=self.function_calling_llm,
             respect_context_window=self.respect_context_window,
-            request_within_rpm_limit=self._rpm_controller.check_or_wait
-            if self._rpm_controller
-            else None,
+            request_within_rpm_limit=(
+                self._rpm_controller.check_or_wait if self._rpm_controller else None
+            ),
             callbacks=[TokenCalcHandler(self._token_process)],
+            ask_human_input_callback=self.ask_human_input_callback
         )
 
     def get_delegation_tools(self, agents: List[BaseAgent]):

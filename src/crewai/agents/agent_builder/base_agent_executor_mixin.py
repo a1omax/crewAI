@@ -1,5 +1,5 @@
 import time
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from crewai.memory.entity.entity_memory_item import EntityMemoryItem
 from crewai.memory.long_term.long_term_memory_item import LongTermMemoryItem
@@ -15,6 +15,8 @@ if TYPE_CHECKING:
     from crewai.agents.agent_builder.base_agent import BaseAgent
 
 
+
+
 class CrewAgentExecutorMixin:
     crew: Optional["Crew"]
     crew_agent: Optional["BaseAgent"]
@@ -22,6 +24,8 @@ class CrewAgentExecutorMixin:
     iterations: int
     have_forced_answer: bool
     max_iter: int
+    ask_human_input_callback: Any = input
+
     _i18n: I18N
     _printer: Printer = Printer()
 
@@ -110,4 +114,5 @@ class CrewAgentExecutorMixin:
             content="\n\n=====\n## Please provide feedback on the Final Result and the Agent's actions:",
             color="bold_yellow",
         )
-        return input()
+
+        return self.ask_human_input_callback()
